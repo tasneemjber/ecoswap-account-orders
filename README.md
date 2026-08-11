@@ -1,131 +1,180 @@
-<<<<<<< HEAD
-# ecoswap-account-orders
-=======
-# Account & Orders Microfrontend (`account-orders-mf`)
+# Account & Orders Microfrontend
 
-![React](https://img.shields.io/badge/React-19.0-61DAFB?logo=react)
-![Vite](https://img.shields.io/badge/Vite-6.0-646CFF?logo=vite)
-![Material UI](https://img.shields.io/badge/Material--UI-9.0-007FFF?logo=mui)
-![Microfrontend](https://img.shields.io/badge/Architecture-Microfrontend-green)
+An independent **Account & Orders Microfrontend** built for the **EcoSwap E-commerce Platform**.
 
-A independent, production-ready **Account & Orders Microfrontend** built for the **EcoSwap E-commerce Platform**. It owns all user authentication, profile management, order history tracking, wishlist management, and product reviews.
+This component is responsible for user authentication, profile management, order history, wishlist management, and product reviews.
 
 ---
 
-## 🚀 Key Features
+## 🚀 Features
 
-* **🔐 Authentication System**: Clean Login & Register forms with input validation, local session persistence, and cross-MFE login event broadcasting.
-* **👤 User Profile Management**: Interactive user profile with editable bio, address, phone number, sustainability badge, and activity metrics.
-* **📦 Order History & Tracking**: Filterable order list (Processing, Delivered, Cancelled) featuring interactive delivery timeline steppers, item breakdowns, total costs, and reordering.
-* **❤️ Wishlist & Saved Items**: Grid view of saved items with stock indicators, discount badges, and a **"Move to Cart"** trigger that communicates directly with the Cart Microfrontend.
-* **⭐ Product Reviews**: User ratings overview, verified purchase badges, and a modal dialog to publish new product feedback.
-* **🔌 Microfrontend Ready**: Built-in Event Bus and Vite Module Federation support for seamless integration into a Shell Host app.
+* 🔐 **Authentication**
+
+  * Login
+  * Registration
+  * User session handling
+
+* 👤 **Profile Management**
+
+  * View and manage user profile information
+  * Personal information and activity details
+
+* 📦 **Order History**
+
+  * View previous orders
+  * Order status and tracking information
+
+* ❤️ **Wishlist**
+
+  * View saved products
+  * Move wishlist products to cart
+
+* ⭐ **Product Reviews**
+
+  * View user reviews
+  * Submit product ratings and reviews
+
+* 🔌 **Microfrontend Integration**
+
+  * Vite Module Federation
+  * Custom Event Bus for communication with the Shell and other microfrontends
 
 ---
 
 ## 🛠️ Tech Stack
 
-* **Framework**: React 19 + Vite
-* **UI Library**: Material UI (MUI v9) with Custom Material Design Theme
-* **Routing**: React Router DOM v7
-* **Icons**: `@mui/icons-material`
-* **Microfrontend Integration**: `@originjs/vite-plugin-federation` & Native `CustomEvent` Bus
+* **Framework:** React 19
+* **Build Tool:** Vite 8
+* **UI Library:** Material UI (MUI) 9
+* **Routing:** React Router DOM 7
+* **Icons:** MUI Icons
+* **Microfrontend:** Vite Module Federation
+* **Communication:** Native `CustomEvent` Event Bus
 
 ---
 
-## 🌐 Exposed Microfrontend Routes
+## 🌐 Routes
 
-When mounted inside the Shell or accessed directly, this MFE provides the following routes:
+| Route       | Description       |
+| ----------- | ----------------- |
+| `/`         | Login             |
+| `/register` | User Registration |
+| `/profile`  | User Profile      |
+| `/orders`   | Order History     |
+| `/wishlist` | Wishlist          |
+| `/reviews`  | Product Reviews   |
 
-| Route Path | Description |
-| :--- | :--- |
-| `/` | Login Page (or Shell default entry) |
-| `/register` | User Registration Form |
-| `/profile` | User Profile & Activity Dashboard |
-| `/orders` | Order History & Shipment Stepper |
-| `/wishlist` | Saved Wishlist Items & Stock Status |
-| `/reviews` | User Reviews & Rating Submission Modal |
-
----
-
-## 📡 Exposed & Listened Custom Events (Event Bus)
-
-The application communicates with the **Shell** and sibling microfrontends (Catalog & Cart) via `CustomEvent` objects dispatched on `window`:
-
-| Event Name | Type | Payload / Detail | Trigger Condition |
-| :--- | :---: | :--- | :--- |
-| `ecoswap:user-login` | Emitted | `{ user, timestamp }` | Dispatched when user logs in successfully |
-| `ecoswap:user-logout` | Emitted | `{ timestamp }` | Dispatched when user signs out |
-| `ecoswap:user-register` | Emitted | `{ user, timestamp }` | Dispatched when new user registers |
-| `ecoswap:add-to-cart` | Emitted | `{ productId, title, price, image, quantity }` | Dispatched when user clicks "Move to Cart" in Wishlist (consumed by Cart MFE) |
-| `ecoswap:wishlist-updated` | Emitted | `{ items, count }` | Dispatched when wishlist items change |
-| `ecoswap:profile-updated` | Emitted | `{ user }` | Dispatched when profile details are updated |
+Any unknown route is redirected to `/`.
 
 ---
 
-## 🔗 Shell Integration Guide
+## 📡 Microfrontend Events
 
-### Method 1: Vite / Webpack Module Federation (Recommended)
-This MFE exposes the following entry points via Module Federation on port `5003`:
+The Account & Orders MFE communicates with the Shell and other microfrontends through browser `CustomEvent`s.
 
-* **Remote Entry URL**: `http://localhost:5003/assets/remoteEntry.js` (or live deployed URL)
-* **Exposed Modules**:
-  * `./AccountApp` -> `./src/App.jsx`
-  * `./AppRoutes` -> `./src/routes/AppRoutes.jsx`
-  * `./eventBus` -> `./src/services/eventBus.js`
+| Event                      | Type    | Purpose                                              |
+| -------------------------- | ------- | ---------------------------------------------------- |
+| `ecoswap:user-login`       | Emitted | Notifies the system after a successful login         |
+| `ecoswap:user-logout`      | Emitted | Notifies the system when the user logs out           |
+| `ecoswap:user-register`    | Emitted | Notifies the system after registration               |
+| `ecoswap:add-to-cart`      | Emitted | Sends a wishlist product to the Cart MFE             |
+| `ecoswap:wishlist-updated` | Emitted | Notifies the system when wishlist data changes       |
+| `ecoswap:profile-updated`  | Emitted | Notifies the system when profile information changes |
 
-**Example Shell Configuration (`vite.config.js` in Shell App):**
-```js
-import federation from '@originjs/vite-plugin-federation';
+---
 
-export default defineConfig({
-  plugins: [
-    federation({
-      name: 'shellApp',
-      remotes: {
-        accountOrdersMFE: 'http://localhost:5003/assets/remoteEntry.js',
-      },
-      shared: ['react', 'react-dom', 'react-router-dom', '@mui/material'],
-    }),
-  ],
-});
+## 🔗 Module Federation
+
+The microfrontend is configured using `@originjs/vite-plugin-federation`.
+
+### MFE Name
+
+```text
+accountOrdersMFE
 ```
 
-### Method 2: iframe Composition
-Embed the live deployed URL of this microfrontend inside the Shell:
-```html
-<iframe src="https://your-account-orders-mfe.vercel.app/profile" width="100%" height="800px" frameborder="0"></iframe>
+### Remote Entry
+
+```text
+remoteEntry.js
 ```
+
+### Exposed Modules
+
+| Module         | Source                     |
+| -------------- | -------------------------- |
+| `./AccountApp` | `src/App.jsx`              |
+| `./AppRoutes`  | `src/routes/AppRoutes.jsx` |
+| `./eventBus`   | `src/services/eventBus.js` |
+
+### Local Development Port
+
+```text
+5003
+```
+
+The Shell application can consume the exposed modules through the generated `remoteEntry.js`.
 
 ---
 
 ## ⚙️ Running Locally
 
-1. **Clone the repository**:
-   ```bash
-   git clone https://github.com/tasneemjber/junit5-HW.git
-   cd account-orders-mf
-   ```
+### 1. Clone the repository
 
-2. **Install dependencies**:
-   ```bash
-   npm install
-   ```
+```bash
+git clone https://github.com/tasneemjber/ecoswap-account-orders.git
+cd ecoswap-account-orders
+```
 
-3. **Start the development server**:
-   ```bash
-   npm run dev
-   ```
-   Open `http://localhost:5173` (or the indicated port) in your browser.
+### 2. Install dependencies
 
-4. **Build for production & preview MFE bundle**:
-   ```bash
-   npm run build
-   npm run preview
-   ```
+```bash
+npm install
+```
+
+### 3. Start the development server
+
+```bash
+npm run dev
+```
+
+The application runs on:
+
+```text
+http://localhost:5003
+```
+
+### 4. Build the project
+
+```bash
+npm run build
+```
+
+### 5. Preview the production build
+
+```bash
+npm run preview
+```
+
+---
+
+## 🌍 Live URL
+
+**To be added after deployment.**
+
+---
+
+## 👩‍💻 Component Owner
+
+**Account & Orders — React**
+
+Part of the **EcoSwap E-commerce Platform** Microfrontend Project.
 
 ---
 
 ## 📄 License
+
+This project is developed for academic purposes.
+
 This project is part of the E-commerce Microfrontend course assignment. Free for educational use.
 >>>>>>> d3b38a4 (Initial account and orders microfrontend)
