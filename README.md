@@ -176,5 +176,5 @@ Part of the **EcoSwap E-commerce Platform** Microfrontend Project.
 
 This project is developed for academic purposes.
 
-This project is part of the E-commerce Microfrontend course assignment. Free for educational use.
+This project is part of the E-commerce Microfrontend course assignment. Free for educational use.urse assignment. Free for educational use.
 >>>>>>> d3b38a4 (Initial account and orders microfrontend)
