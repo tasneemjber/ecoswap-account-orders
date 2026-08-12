@@ -4,9 +4,6 @@ import Header from "./Header";
 import Footer from "./Footer";
 
 function Layout({ children }) {
-  const location = useLocation();
-  const hideLayout = ["/", "/register"].includes(location.pathname);
-
   return (
     <Box
       sx={{
@@ -16,11 +13,11 @@ function Layout({ children }) {
         bgcolor: "#f9fafb",
       }}
     >
-      {!hideLayout && <Header />}
+      <Header />
       <Box sx={{ flex: 1, display: "flex", flexDirection: "column" }}>
         {children}
       </Box>
-      {!hideLayout && <Footer />}
+      <Footer />
     </Box>
   );
 }

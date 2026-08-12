@@ -24,6 +24,7 @@ function Header() {
   const location = useLocation();
   const [mobileOpen, setMobileOpen] = useState(false);
 
+  const isAuthPage = ["/", "/register"].includes(location.pathname);
   const navItems = [];
 
   const toggleMobileDrawer = () => setMobileOpen(!mobileOpen);
@@ -41,7 +42,6 @@ function Header() {
     >
       <Container maxWidth="lg">
         <Toolbar disableGutters sx={{ minHeight: 64, justifyContent: "space-between" }}>
-    
           <Box
             onClick={() => navigate("/orders")}
             sx={{
@@ -64,67 +64,68 @@ function Header() {
             </Typography>
           </Box>
 
-     
-          <Box sx={{ display: { xs: "none", md: "flex" }, alignItems: "center", gap: 3 }}>
-            {navItems.map((item) => {
-              const isActive = location.pathname === item.path;
-              return (
-                <Typography
-                  key={item.path}
-                  onClick={() => navigate(item.path)}
-                  sx={{
-                    cursor: "pointer",
-                    fontWeight: isActive ? 700 : 500,
-                    fontSize: "0.95rem",
-                    color: isActive ? "#15803d" : "#4b5563",
-                    position: "relative",
-                    "&:hover": { color: "#15803d" },
-                    ...(isActive && {
-                      "&::after": {
-                        content: '""',
-                        position: "absolute",
-                        bottom: -4,
-                        left: 0,
-                        right: 0,
-                        height: 2,
-                        bgcolor: "#15803d",
-                        borderRadius: 1,
-                      },
-                    }),
-                  }}
-                >
-                  {item.label}
-                </Typography>
-              );
-            })}
-          </Box>
+          {!isAuthPage && (
+            <Box sx={{ display: { xs: "none", md: "flex" }, alignItems: "center", gap: 3 }}>
+              {navItems.map((item) => {
+                const isActive = location.pathname === item.path;
+                return (
+                  <Typography
+                    key={item.path}
+                    onClick={() => navigate(item.path)}
+                    sx={{
+                      cursor: "pointer",
+                      fontWeight: isActive ? 700 : 500,
+                      fontSize: "0.95rem",
+                      color: isActive ? "#15803d" : "#4b5563",
+                      position: "relative",
+                      "&:hover": { color: "#15803d" },
+                      ...(isActive && {
+                        "&::after": {
+                          content: '""',
+                          position: "absolute",
+                          bottom: -4,
+                          left: 0,
+                          right: 0,
+                          height: 2,
+                          bgcolor: "#15803d",
+                          borderRadius: 1,
+                        },
+                      }),
+                    }}
+                  >
+                    {item.label}
+                  </Typography>
+                );
+              })}
+            </Box>
+          )}
 
+          {!isAuthPage && (
+            <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+              <IconButton
+                onClick={() => navigate("/cart")}
+                size="medium"
+                sx={{ color: "#374151" }}
+              >
+                <ShoppingCartOutlined />
+              </IconButton>
 
-          <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-            <IconButton
-              onClick={() => navigate("/cart")}
-              size="medium"
-              sx={{ color: "#374151" }}
-            >
-              <ShoppingCartOutlined />
-            </IconButton>
+              <IconButton
+                onClick={() => navigate("/profile")}
+                size="medium"
+                sx={{ color: "#15803d" }}
+              >
+                <PersonOutlined />
+              </IconButton>
 
-            <IconButton
-              onClick={() => navigate("/profile")}
-              size="medium"
-              sx={{ color: "#15803d" }}
-            >
-              <PersonOutlined />
-            </IconButton>
-
-  
-            <IconButton
-              onClick={toggleMobileDrawer}
-              sx={{ display: { xs: "flex", md: "none" }, color: "#374151" }}
-            >
-              <MenuIcon />
-            </IconButton>
-          </Box>
+              <IconButton
+                onClick={toggleMobileDrawer}
+                sx={{ display: { xs: "flex", md: "none" }, color: "#374151" }}
+              >
+                <MenuIcon />
+              </IconButton>
+            </Box>
+          )}
         </Toolbar>
       </Container>
 

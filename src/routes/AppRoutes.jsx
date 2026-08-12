@@ -16,7 +16,7 @@ function AppRoutes() {
       <Route path="/orders" element={<Orders />} />
       <Route path="/wishlist" element={<Wishlist />} />
       <Route path="/reviews" element={<Reviews />} />
-      {/* Catch-all fallback */}
+
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );

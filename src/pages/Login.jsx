@@ -60,10 +60,6 @@ function Login() {
           }}
         >
           <Stack spacing={2.5} alignItems="center">
-            <Typography variant="h5" sx={{ fontWeight: 700, color: "#15803d" }}>
-              EcoSwap
-            </Typography>
-
             <Box sx={{ textAlign: "center" }}>
               <Typography variant="h6" sx={{ fontWeight: 700, color: "#111827" }}>
                 Welcome back
