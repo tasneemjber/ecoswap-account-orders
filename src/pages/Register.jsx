@@ -11,6 +11,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import Layout from "../components/Layout";
 import { registerUser } from "../services/auth";
+import { dispatchAccountEvent, ACCOUNT_EVENTS } from "../services/eventBus";
 
 function Register() {
   const navigate = useNavigate();
@@ -36,7 +37,8 @@ function Register() {
     }
 
     try {
-      registerUser({ name, email, phone, password });
+      const user = registerUser({ name, email, phone, password });
+      dispatchAccountEvent(ACCOUNT_EVENTS.USER_REGISTER, { name: user.name, email: user.email });
       navigate("/orders");
     } catch (err) {
       setError(err.message);

@@ -14,6 +14,7 @@ import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import Layout from "../components/Layout";
 import { loginUser } from "../services/auth";
+import { dispatchAccountEvent, ACCOUNT_EVENTS } from "../services/eventBus";
 
 function Login() {
   const navigate = useNavigate();
@@ -27,7 +28,8 @@ function Login() {
     setError("");
 
     try {
-      loginUser({ email, password });
+      const user = loginUser({ email, password });
+      dispatchAccountEvent(ACCOUNT_EVENTS.USER_LOGIN, { name: user.name, email: user.email });
       navigate("/orders");
     } catch (err) {
       setError(err.message);

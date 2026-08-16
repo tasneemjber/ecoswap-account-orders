@@ -18,6 +18,7 @@ import {
   Menu as MenuIcon,
 } from "@mui/icons-material";
 import { useNavigate, useLocation } from "react-router-dom";
+import { postToShell } from "../services/shellBridge";
 
 function Header() {
   const navigate = useNavigate();
@@ -103,7 +104,7 @@ function Header() {
           {!isAuthPage && (
             <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
               <IconButton
-                onClick={() => navigate("/cart")}
+                onClick={() => postToShell("account:go-to-cart", {})}
                 size="medium"
                 sx={{ color: "#374151" }}
               >
